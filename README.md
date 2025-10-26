@@ -16,7 +16,7 @@ A modern web service for managing gugugaga live streaming codes, built with Rust
 
 ### Installing mise
 
-mise automatically manages tool versions specified in `.mise.toml`. Install it with:
+mise automatically manages tool versions specified in `mise.toml`. Install it with:
 
 ```bash
 # Using just (macOS uses Homebrew, Linux uses curl)
