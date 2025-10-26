@@ -1,10 +1,55 @@
 [tools]
+rust = "stable"
 bun = "latest"
-just = "latest"
-rust = "latest"
 
 [env]
-# Backend port
-BACKEND_PORT = "11451"
-# Frontend port
-FRONTEND_PORT = "11452"
+RUST_LOG = "debug"
+SERVER_HOST = "0.0.0.0"
+SERVER_PORT = "11451"
+CORS_ORIGINS = "http://localhost:11452"
+
+[tasks.dev]
+description = "Start both backend and frontend in development mode"
+run = "cargo run --manifest-path backend/Cargo.toml & bun run --cwd frontend dev"
+
+[tasks."backend:dev"]
+description = "Start the Rust backend server"
+run = "cd backend && cargo run"
+
+[tasks."frontend:dev"]
+description = "Start the Astro frontend development server"
+run = "cd frontend && bun run dev"
+
+[tasks."backend:build"]
+description = "Build the Rust backend"
+run = "cd backend && cargo build --release"
+
+[tasks."frontend:build"]
+description = "Build the Astro frontend"
+run = "cd frontend && bun run build"
+
+[tasks.build]
+description = "Build both backend and frontend"
+run = [
+  "cargo build --release --manifest-path backend/Cargo.toml",
+  "bun run --cwd frontend build"
+]
+
+[tasks.check]
+description = "Check code quality for both projects"
+run = [
+  "cd backend && cargo check",
+  "cd backend && cargo clippy",
+  "cd frontend && bun run build"
+]
+
+[tasks.clean]
+description = "Clean build artifacts"
+run = [
+  "cd backend && cargo clean",
+  "cd frontend && rm -rf dist node_modules/.astro"
+]
+
+[tasks.install]
+description = "Install dependencies for both projects"
+run = "cd frontend && bun install"

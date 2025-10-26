@@ -90,3 +90,29 @@ pub struct UserInfo {
     pub follower: u64,
     pub dynamic_count: u64,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct QrCodeData {
+    pub url: String,
+    pub qrcode_key: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct QrCodeResponse {
+    pub qr_url: String,
+    pub qrcode_key: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct QrPollRequest {
+    pub qrcode_key: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct QrPollResponse {
+    pub code: i32,
+    pub message: String,
+    pub cookies: Option<String>,
+    pub csrf_token: Option<String>,
+    pub room_id: Option<String>,
+}

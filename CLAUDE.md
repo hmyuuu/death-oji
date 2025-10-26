@@ -5,7 +5,7 @@
 Death-Oji is a gugugaga live streaming management tool with:
 - **Backend**: Rust (Axum) on port 11451
 - **Frontend**: Astro + Tailwind CSS v4 (Dracula theme) on port 11452
-- **Features**: Stream management, user info, auto-save settings, category selection
+- **Features**: QR code login, stream management, user info, auto-save settings, category selection
 
 ## Development Workflow
 
@@ -65,6 +65,8 @@ death-oji/
 ### Backend (Rust)
 
 **API Endpoints:**
+- `GET /api/qrcode/generate` - Generate QR code for login
+- `POST /api/qrcode/poll` - Poll QR code login status
 - `POST /api/stream/start` - Start stream, returns RTMP credentials
 - `POST /api/stream/stop` - Stop stream
 - `PUT /api/stream/update` - Update stream title
@@ -75,10 +77,12 @@ death-oji/
 - All gugugaga API requests require Cookie and CSRF token headers
 - App signing uses MD5 hash with wbi_key
 - partition.json must be in backend root directory
+- QR login polls every 2 seconds, auto-fills credentials on success
 
 ### Frontend (Astro)
 
 **Key Features:**
+- QR code login with toggle switch (Manual/QR mode)
 - Dracula theme colors throughout
 - Auto-save stream settings to localStorage
 - Responsive 3-column layout with flexbox
@@ -88,6 +92,7 @@ death-oji/
 **State Management:**
 - `userUid` - Stored when user info loads, used for space URL
 - `partitionsData` - Loaded from API, used for category dropdowns
+- `qrPollInterval` - Interval for polling QR login status
 - localStorage saves: title, mainCategory, areaId
 
 **Important CSS Classes:**
@@ -128,7 +133,27 @@ Edit `backend/partition.json` - format:
 
 ## Deployment
 
-### Production Build
+### Docker Compose (Recommended)
+
+```bash
+# Build and start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+
+# Rebuild after changes
+docker-compose up -d --build
+```
+
+**Ports:**
+- Backend: http://localhost:11451
+- Frontend: http://localhost:11452
+
+### Manual Build
 
 ```bash
 # Backend
@@ -139,26 +164,13 @@ cargo build --release
 # Frontend
 cd frontend
 bun run build
-# Deploy dist/ folder to static hosting
 ```
-
-### Environment Configuration
-
-**Backend:**
-- Port: 11451 (hardcoded in main.rs)
-- CORS: Allows all origins (configure for production)
-
-**Frontend:**
-- Port: 11452 (set in astro.config.mjs)
-- API_BASE: `http://localhost:11451` (update for production)
 
 ### Production Checklist
 
 - [ ] Update API_BASE in frontend to production backend URL
 - [ ] Configure CORS in backend for production domain
-- [ ] Use HTTPS for both frontend and backend
-- [ ] Set up reverse proxy if needed
-- [ ] Ensure partition.json is accessible to backend
+- [ ] Ensure partition.json is in backend directory
 
 ## Troubleshooting
 
@@ -191,6 +203,10 @@ lsof -ti:11451 | xargs kill -9
 
 ### Manual Testing Checklist
 
+- [ ] QR code login generates and displays QR code
+- [ ] QR code polling updates status correctly
+- [ ] QR login auto-fills credentials on success
+- [ ] Toggle between Manual/QR login modes works
 - [ ] Load/Save credentials to JSON file
 - [ ] Check user info loads profile and shows link buttons
 - [ ] Select main category populates sub-categories
@@ -210,6 +226,14 @@ curl http://localhost:11451/health
 
 # Get partitions
 curl http://localhost:11451/api/partitions
+
+# Generate QR code
+curl http://localhost:11451/api/qrcode/generate
+
+# Poll QR code (replace KEY with actual qrcode_key)
+curl -X POST http://localhost:11451/api/qrcode/poll \
+  -H "Content-Type: application/json" \
+  -d '{"qrcode_key":"KEY"}'
 ```
 
 ## Code Style

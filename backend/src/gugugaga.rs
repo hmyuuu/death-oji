@@ -78,8 +78,6 @@ impl gugugagaClient {
 
         let signed_params = self.app_sign(params);
 
-        let cookie_map = self.parse_cookies(cookies);
-
         let resp = self
             .client
             .get("https://api.live.bilibili.com/xlive/app-blink/v1/liveVersionInfo/getHomePageLiveVersion")
@@ -125,8 +123,6 @@ impl gugugagaClient {
 
         let signed_params = self.app_sign(params);
 
-        let cookie_map = self.parse_cookies(cookies);
-
         let resp = self
             .client
             .post("https://api.live.bilibili.com/room/v1/Room/startLive")
@@ -170,8 +166,6 @@ impl gugugagaClient {
         params.insert("csrf_token", csrf_token);
         params.insert("csrf", csrf_token);
 
-        let cookie_map = self.parse_cookies(cookies);
-
         let resp = self
             .client
             .post("https://api.live.bilibili.com/room/v1/Room/stopLive")
@@ -210,8 +204,6 @@ impl gugugagaClient {
         params.insert("csrf_token", csrf_token);
         params.insert("csrf", csrf_token);
 
-        let cookie_map = self.parse_cookies(cookies);
-
         let resp = self
             .client
             .post("https://api.live.bilibili.com/room/v1/Room/update")
@@ -237,7 +229,16 @@ impl gugugagaClient {
     }
 
     pub async fn get_partitions(&self) -> Result<serde_json::Value, String> {
-        let data = std::fs::read_to_string("partition.json")
+        let path = std::env::current_dir()
+            .ok()
+            .and_then(|p| Some(p.join("partition.json")))
+            .filter(|p| p.exists())
+            .or_else(|| Some(std::path::PathBuf::from("backend/partition.json")))
+            .filter(|p| p.exists())
+            .or_else(|| Some(std::path::PathBuf::from("partition.json")))
+            .ok_or("partition.json not found")?;
+
+        let data = std::fs::read_to_string(&path)
             .map_err(|e| format!("Failed to read partition.json: {}", e))?;
         let json: serde_json::Value = serde_json::from_str(&data)
             .map_err(|e| format!("Failed to parse partition.json: {}", e))?;
@@ -298,5 +299,105 @@ impl gugugagaClient {
             follower: stat_data["follower"].as_u64().unwrap_or(0),
             dynamic_count: stat_data["dynamic_count"].as_u64().unwrap_or(0),
         })
+    }
+
+    pub async fn generate_qrcode(&self) -> Result<QrCodeResponse, String> {
+        let resp = self
+            .client
+            .get("https://passport.bilibili.com/x/passport-login/web/qrcode/generate")
+            .header("User-Agent", "Mozilla/5.0")
+            .send()
+            .await
+            .map_err(|e| format!("Request failed: {}", e))?;
+
+        let api_resp: gugugagaApiResponse<QrCodeData> = resp
+            .json()
+            .await
+            .map_err(|e| format!("Parse failed: {}", e))?;
+
+        if api_resp.code != 0 {
+            return Err(format!("API error: {}", api_resp.message));
+        }
+
+        let data = api_resp.data.unwrap();
+        Ok(QrCodeResponse {
+            qr_url: data.url,
+            qrcode_key: data.qrcode_key,
+        })
+    }
+
+    pub async fn poll_qrcode(&self, qrcode_key: &str) -> Result<QrPollResponse, String> {
+        let resp = self
+            .client
+            .get("https://passport.bilibili.com/x/passport-login/web/qrcode/poll")
+            .query(&[("qrcode_key", qrcode_key)])
+            .header("User-Agent", "Mozilla/5.0")
+            .send()
+            .await
+            .map_err(|e| format!("Request failed: {}", e))?;
+
+        let cookies = resp.cookies().collect::<Vec<_>>();
+        let cookie_str = cookies.iter()
+            .map(|c| format!("{}={}", c.name(), c.value()))
+            .collect::<Vec<_>>()
+            .join("; ");
+        let csrf = cookies.iter()
+            .find(|c| c.name() == "bili_jct")
+            .map(|c| c.value().to_string());
+        let dede_user_id = cookies.iter()
+            .find(|c| c.name() == "DedeUserID")
+            .map(|c| c.value().to_string());
+
+        let api_resp: gugugagaApiResponse<serde_json::Value> = resp
+            .json()
+            .await
+            .map_err(|e| format!("Parse failed: {}", e))?;
+
+        let code = api_resp.data.as_ref()
+            .and_then(|d| d["code"].as_i64())
+            .unwrap_or(-1) as i32;
+
+        let message = match code {
+            0 => "Success".to_string(),
+            86038 => "QR code expired".to_string(),
+            86090 => "QR code scanned, waiting for confirmation".to_string(),
+            86101 => "Waiting for scan".to_string(),
+            _ => api_resp.message.clone(),
+        };
+
+        if code == 0 {
+            let room_id = if let Some(uid) = &dede_user_id {
+                match self.client
+                    .get(format!("https://api.live.bilibili.com/room/v2/Room/room_id_by_uid?uid={}", uid))
+                    .header("User-Agent", "Mozilla/5.0")
+                    .send()
+                    .await
+                {
+                    Ok(resp) => match resp.json::<gugugagaApiResponse<serde_json::Value>>().await {
+                        Ok(r) => r.data.and_then(|d| d["room_id"].as_u64()).map(|id| id.to_string()),
+                        Err(_) => None,
+                    },
+                    Err(_) => None,
+                }
+            } else {
+                None
+            };
+
+            Ok(QrPollResponse {
+                code,
+                message,
+                cookies: Some(cookie_str),
+                csrf_token: csrf,
+                room_id,
+            })
+        } else {
+            Ok(QrPollResponse {
+                code,
+                message,
+                cookies: None,
+                csrf_token: None,
+                room_id: None,
+            })
+        }
     }
 }

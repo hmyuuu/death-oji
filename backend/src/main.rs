@@ -28,6 +28,8 @@ async fn main() {
         .route("/api/stream/update", put(handlers::update_stream))
         .route("/api/user/info", post(handlers::get_user_info))
         .route("/api/partitions", get(handlers::get_partitions))
+        .route("/api/qrcode/generate", get(handlers::generate_qrcode))
+        .route("/api/qrcode/poll", post(handlers::poll_qrcode))
         .layer(cors)
         .with_state(state);
 

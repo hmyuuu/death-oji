@@ -106,3 +106,38 @@ pub async fn get_partitions(
 
     Ok(Json(partitions))
 }
+
+pub async fn generate_qrcode(
+    State(state): State<Arc<AppState>>,
+) -> Result<Json<QrCodeResponse>, (StatusCode, Json<ErrorResponse>)> {
+    let qr_data = state.gugugaga_client.generate_qrcode().await.map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(ErrorResponse {
+                error: format!("Failed to generate QR code: {}", e),
+            }),
+        )
+    })?;
+
+    Ok(Json(qr_data))
+}
+
+pub async fn poll_qrcode(
+    State(state): State<Arc<AppState>>,
+    Json(req): Json<QrPollRequest>,
+) -> Result<Json<QrPollResponse>, (StatusCode, Json<ErrorResponse>)> {
+    let poll_result = state
+        .gugugaga_client
+        .poll_qrcode(&req.qrcode_key)
+        .await
+        .map_err(|e| {
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(ErrorResponse {
+                    error: format!("Failed to poll QR code: {}", e),
+                }),
+            )
+        })?;
+
+    Ok(Json(poll_result))
+}

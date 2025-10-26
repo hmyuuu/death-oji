@@ -1,4 +1,15 @@
-.PHONY: dev run backend frontend build deploy clean
+.PHONY: install dev run backend frontend build deploy clean
+
+install:
+	@if command -v mise > /dev/null 2>&1; then \
+		echo "✓ mise is already installed"; \
+		mise --version; \
+	else \
+		echo "Installing mise..."; \
+		curl https://mise.run | sh; \
+		echo "✓ mise installed successfully"; \
+		echo "Run 'mise install' to install project tools"; \
+	fi
 
 dev: run
 

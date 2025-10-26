@@ -1,3 +1,22 @@
+# Install mise (platform-specific)
+install:
+    #!/usr/bin/env bash
+    if command -v mise &> /dev/null; then \
+        echo "✓ mise is already installed"; \
+        mise --version; \
+    elif [[ "$OSTYPE" == "darwin"* ]]; then \
+        echo "Installing mise via Homebrew..."; \
+        brew install mise; \
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then \
+        echo "Installing mise via curl..."; \
+        curl https://mise.run | sh; \
+    else \
+        echo "Please install mise manually from https://github.com/jdx/mise"; \
+        exit 1; \
+    fi && \
+    echo "✓ mise installed successfully" && \
+    echo "Run 'mise install' to install project tools"
+
 # Run both backend and frontend in development mode
 dev: run
 

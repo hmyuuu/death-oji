@@ -99,48 +99,65 @@ import "../styles/global.css";
                 </div>
 
                 <div class="bg-[#44475a] rounded-lg shadow-md p-6 flex-1 flex flex-col">
-                    <h2 class="text-2xl font-semibold mb-4 text-[#f8f8f2]">
-                        Account Credentials
-                    </h2>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-semibold text-[#f8f8f2]">
+                            Account Credentials
+                        </h2>
+                        <button
+                            type="button"
+                            id="loginModeToggle"
+                            class="text-sm bg-[#6272a4] text-[#f8f8f2] px-3 py-1 rounded-md hover:bg-[#525d8a] transition"
+                        >
+                            QR Login
+                        </button>
+                    </div>
                     <form id="credentialsForm" class="space-y-4 flex-1 flex flex-col">
-                        <div>
-                            <label
-                                for="roomId"
-                                class="block text-sm font-medium text-[#f8f8f2] mb-1"
-                                >Room ID</label
-                            >
-                            <input
-                                type="text"
-                                id="roomId"
-                                required
-                                class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9]"
-                            />
+                        <div id="manualLogin">
+                            <div class="space-y-4">
+                                <div>
+                                    <label
+                                        for="roomId"
+                                        class="block text-sm font-medium text-[#f8f8f2] mb-1"
+                                        >Room ID</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="roomId"
+                                        required
+                                        class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9]"
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        for="cookies"
+                                        class="block text-sm font-medium text-[#f8f8f2] mb-1"
+                                        >Cookies</label
+                                    >
+                                    <input
+                                        type="password"
+                                        id="cookies"
+                                        required
+                                        class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9]"
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        for="csrfToken"
+                                        class="block text-sm font-medium text-[#f8f8f2] mb-1"
+                                        >CSRF Token</label
+                                    >
+                                    <input
+                                        type="password"
+                                        id="csrfToken"
+                                        required
+                                        class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9]"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label
-                                for="cookies"
-                                class="block text-sm font-medium text-[#f8f8f2] mb-1"
-                                >Cookies</label
-                            >
-                            <input
-                                type="password"
-                                id="cookies"
-                                required
-                                class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9]"
-                            />
-                        </div>
-                        <div>
-                            <label
-                                for="csrfToken"
-                                class="block text-sm font-medium text-[#f8f8f2] mb-1"
-                                >CSRF Token</label
-                            >
-                            <input
-                                type="password"
-                                id="csrfToken"
-                                required
-                                class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9]"
-                            />
+                        <div id="qrLogin" class="hidden flex-1 flex flex-col items-center justify-center">
+                            <div id="qrCode" class="bg-white p-4 rounded-lg mb-4"></div>
+                            <p id="qrStatus" class="text-[#f8f8f2] text-center"></p>
                         </div>
                         <div class="flex-1"></div>
                         <div class="flex gap-2">
@@ -656,6 +673,78 @@ import "../styles/global.css";
             });
 
             window.copyToClipboard = copyToClipboard;
+
+            // QR Login functionality
+            let qrPollInterval = null;
+
+            document.getElementById("loginModeToggle").addEventListener("click", async () => {
+                const manualLogin = document.getElementById("manualLogin");
+                const qrLogin = document.getElementById("qrLogin");
+                const toggleBtn = document.getElementById("loginModeToggle");
+
+                if (manualLogin.classList.contains("hidden")) {
+                    manualLogin.classList.remove("hidden");
+                    qrLogin.classList.add("hidden");
+                    toggleBtn.textContent = "QR Login";
+                    if (qrPollInterval) clearInterval(qrPollInterval);
+                } else {
+                    manualLogin.classList.add("hidden");
+                    qrLogin.classList.remove("hidden");
+                    toggleBtn.textContent = "Manual Login";
+                    await startQrLogin();
+                }
+            });
+
+            async function startQrLogin() {
+                try {
+                    const response = await fetch(`${API_BASE}/api/qrcode/generate`);
+                    const data = await response.json();
+
+                    const qrCode = document.getElementById("qrCode");
+                    qrCode.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(data.qr_url)}" alt="QR Code">`;
+
+                    document.getElementById("qrStatus").textContent = "Scan QR code with gugugaga app";
+
+                    pollQrCode(data.qrcode_key);
+                } catch (e) {
+                    showStatus("Failed to generate QR code", true);
+                }
+            }
+
+            async function pollQrCode(qrcodeKey) {
+                qrPollInterval = setInterval(async () => {
+                    try {
+                        const response = await fetch(`${API_BASE}/api/qrcode/poll`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ qrcode_key: qrcodeKey }),
+                        });
+                        const data = await response.json();
+
+                        if (data.code === 0) {
+                            clearInterval(qrPollInterval);
+                            document.getElementById("roomId").value = data.room_id || "";
+                            document.getElementById("cookies").value = data.cookies || "";
+                            document.getElementById("csrfToken").value = data.csrf_token || "";
+                            document.getElementById("qrStatus").textContent = "Login successful!";
+                            showStatus("QR login successful!");
+                            setTimeout(() => {
+                                document.getElementById("loginModeToggle").click();
+                                loadUserInfo(data.cookies);
+                            }, 1000);
+                        } else if (data.code === 86090) {
+                            document.getElementById("qrStatus").textContent = "QR code scanned, waiting for confirmation...";
+                        } else if (data.code === 86038) {
+                            clearInterval(qrPollInterval);
+                            document.getElementById("qrStatus").textContent = "QR code expired";
+                            showStatus("QR code expired, please try again", true);
+                        }
+                    } catch (e) {
+                        clearInterval(qrPollInterval);
+                        showStatus("QR login failed", true);
+                    }
+                }, 2000);
+            }
         </script>
     </body>
 </html>
