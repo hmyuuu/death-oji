@@ -10,13 +10,13 @@ import "../styles/global.css";
         <title>Death-Oji - gugugaga Live Stream Code</title>
     </head>
     <body class="bg-[#1e1e2e] min-h-screen">
-        <div class="container mx-auto px-4 py-8">
-            <header class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-[#cba6f7] mb-2">
+        <div class="container mx-auto px-4 py-4 md:py-8">
+            <header class="text-center mb-6 md:mb-8">
+                <h1 class="text-2xl md:text-4xl font-bold text-[#cba6f7] mb-2">
                     Death-Oji
                 </h1>
                 <p
-                    class="text-[#cdd6f4] italic max-w-xl mx-auto text-base leading-relaxed opacity-70"
+                    class="text-[#cdd6f4] italic max-w-xl mx-auto text-sm md:text-base leading-relaxed opacity-70 px-2"
                 >
                     "Death-Oji escaped Live-Hime's samsara,<br />
                     then immediately reincarnated as the same karma:<br />
@@ -25,12 +25,12 @@ import "../styles/global.css";
                 </p>
             </header>
 
-            <div class="flex gap-6 items-stretch">
+            <div class="flex flex-col lg:flex-row gap-4 md:gap-6 items-stretch">
                 <div
                     id="userInfo"
-                    class="bg-[#313244] rounded-lg shadow-md p-6 hidden flex-1 flex flex-col"
+                    class="bg-[#313244] rounded-lg shadow-md p-4 md:p-6 hidden flex-1 flex flex-col"
                 >
-                    <h2 class="text-2xl font-semibold mb-4 text-[#cdd6f4]">
+                    <h2 class="text-xl md:text-2xl font-semibold mb-4 text-[#cdd6f4]">
                         UP Information
                     </h2>
                     <div class="flex flex-col items-center mb-4">
@@ -49,48 +49,48 @@ import "../styles/global.css";
                         </h3>
                         <p id="userLevel" class="text-[#9399b2]"></p>
                     </div>
-                    <div class="grid grid-cols-3 gap-4 text-center mt-6">
-                        <div class="p-3">
+                    <div class="grid grid-cols-3 gap-2 md:gap-4 text-center mt-6">
+                        <div class="p-2 md:p-3">
                             <p
-                                class="text-2xl font-bold text-[#89dceb]"
+                                class="text-xl md:text-2xl font-bold text-[#89dceb]"
                                 id="userFollowing"
                             >
                                 0
                             </p>
-                            <p class="text-sm text-[#9399b2]">Following</p>
+                            <p class="text-xs md:text-sm text-[#9399b2]">Following</p>
                         </div>
-                        <div class="p-3">
+                        <div class="p-2 md:p-3">
                             <p
-                                class="text-2xl font-bold text-[#f5c2e7]"
+                                class="text-xl md:text-2xl font-bold text-[#f5c2e7]"
                                 id="userFollower"
                             >
                                 0
                             </p>
-                            <p class="text-sm text-[#9399b2]">Followers</p>
+                            <p class="text-xs md:text-sm text-[#9399b2]">Followers</p>
                         </div>
-                        <div class="p-3">
+                        <div class="p-2 md:p-3">
                             <p
-                                class="text-2xl font-bold text-[#cba6f7]"
+                                class="text-xl md:text-2xl font-bold text-[#cba6f7]"
                                 id="userDynamic"
                             >
                                 0
                             </p>
-                            <p class="text-sm text-[#9399b2]">Posts</p>
+                            <p class="text-xs md:text-sm text-[#9399b2]">Posts</p>
                         </div>
                     </div>
                     <div class="flex-1"></div>
-                    <div id="linkButtons" class="flex gap-2 hidden">
+                    <div id="linkButtons" class="flex flex-col sm:flex-row gap-2 hidden">
                         <button
                             type="button"
                             id="spaceBtn"
-                            class="flex-1 bg-[#89b4fa] text-[#1e1e2e] py-2 px-4 rounded-md hover:bg-[#74c7ec] transition font-semibold min-h-10"
+                            class="flex-1 bg-[#89b4fa] text-[#1e1e2e] py-3 px-4 rounded-md hover:bg-[#74c7ec] active:bg-[#74c7ec] transition font-semibold min-h-12 touch-manipulation"
                         >
                             Open gugugaga Space
                         </button>
                         <button
                             type="button"
                             id="liveBtn"
-                            class="flex-1 bg-[#a6e3a1] text-[#1e1e2e] py-2 px-4 rounded-md hover:bg-[#94e2d5] transition font-semibold min-h-10"
+                            class="flex-1 bg-[#a6e3a1] text-[#1e1e2e] py-3 px-4 rounded-md hover:bg-[#94e2d5] active:bg-[#94e2d5] transition font-semibold min-h-12 touch-manipulation"
                             onclick="window.open('https://live.bilibili.com/' + document.getElementById('roomId').value, '_blank')"
                         >
                             Open Live Room
@@ -98,15 +98,15 @@ import "../styles/global.css";
                     </div>
                 </div>
 
-                <div class="bg-[#313244] rounded-lg shadow-md p-6 flex-1 flex flex-col">
+                <div class="bg-[#313244] rounded-lg shadow-md p-4 md:p-6 flex-1 flex flex-col">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-2xl font-semibold text-[#cdd6f4]">
+                        <h2 class="text-xl md:text-2xl font-semibold text-[#cdd6f4]">
                             Account Credentials
                         </h2>
                         <button
                             type="button"
                             id="loginModeToggle"
-                            class="text-sm bg-[#585b70] text-[#cdd6f4] px-3 py-1 rounded-md hover:bg-[#6c7086] transition"
+                            class="text-xs md:text-sm bg-[#585b70] text-[#cdd6f4] px-3 py-2 rounded-md hover:bg-[#6c7086] active:bg-[#6c7086] transition touch-manipulation"
                         >
                             QR Login
                         </button>
@@ -124,7 +124,7 @@ import "../styles/global.css";
                                         type="text"
                                         id="roomId"
                                         required
-                                        class="w-full px-3 py-2 border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7]"
+                                        class="w-full px-3 py-3 text-base border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7]"
                                     />
                                 </div>
                                 <div>
@@ -137,7 +137,7 @@ import "../styles/global.css";
                                         type="password"
                                         id="cookies"
                                         required
-                                        class="w-full px-3 py-2 border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7]"
+                                        class="w-full px-3 py-3 text-base border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7]"
                                     />
                                 </div>
                                 <div>
@@ -150,35 +150,35 @@ import "../styles/global.css";
                                         type="password"
                                         id="csrfToken"
                                         required
-                                        class="w-full px-3 py-2 border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7]"
+                                        class="w-full px-3 py-3 text-base border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7]"
                                     />
                                 </div>
                             </div>
                         </div>
                         <div id="qrLogin" class="hidden flex-1 flex flex-col items-center justify-center">
                             <div id="qrCode" class="bg-white p-4 rounded-lg mb-4"></div>
-                            <p id="qrStatus" class="text-[#cdd6f4] text-center"></p>
+                            <p id="qrStatus" class="text-[#cdd6f4] text-center text-sm"></p>
                         </div>
                         <div class="flex-1"></div>
-                        <div class="flex gap-2">
+                        <div class="flex flex-col sm:flex-row gap-2">
                             <button
                                 type="button"
                                 id="loadBtn"
-                                class="flex-1 bg-[#89b4fa] text-[#1e1e2e] py-2 px-4 rounded-md hover:bg-[#74c7ec] transition font-semibold min-h-10"
+                                class="flex-1 bg-[#89b4fa] text-[#1e1e2e] py-3 px-4 rounded-md hover:bg-[#74c7ec] active:bg-[#74c7ec] transition font-semibold min-h-12 touch-manipulation"
                             >
                                 Load from JSON
                             </button>
                             <button
                                 type="button"
                                 id="saveBtn"
-                                class="flex-1 bg-[#585b70] text-[#cdd6f4] py-2 px-4 rounded-md hover:bg-[#6c7086] transition font-semibold min-h-10"
+                                class="flex-1 bg-[#585b70] text-[#cdd6f4] py-3 px-4 rounded-md hover:bg-[#6c7086] active:bg-[#6c7086] transition font-semibold min-h-12 touch-manipulation"
                             >
                                 Save to File
                             </button>
                             <button
                                 type="button"
                                 id="checkUserBtn"
-                                class="flex-1 bg-[#cba6f7] text-[#1e1e2e] py-2 px-4 rounded-md hover:bg-[#b4befe] transition font-semibold min-h-10"
+                                class="flex-1 bg-[#cba6f7] text-[#1e1e2e] py-3 px-4 rounded-md hover:bg-[#b4befe] active:bg-[#b4befe] transition font-semibold min-h-12 touch-manipulation"
                             >
                                 Check User Info
                             </button>
@@ -186,8 +186,8 @@ import "../styles/global.css";
                     </form>
                 </div>
 
-                <div class="bg-[#313244] rounded-lg shadow-md p-6 flex-1 flex flex-col">
-                    <h2 class="text-2xl font-semibold mb-4 text-[#cdd6f4]">
+                <div class="bg-[#313244] rounded-lg shadow-md p-4 md:p-6 flex-1 flex flex-col">
+                    <h2 class="text-xl md:text-2xl font-semibold mb-4 text-[#cdd6f4]">
                         Stream Settings
                     </h2>
                     <form id="streamForm" class="space-y-4 flex-1 flex flex-col">
@@ -201,10 +201,10 @@ import "../styles/global.css";
                                 type="text"
                                 id="title"
                                 value="My Live Stream"
-                                class="w-full px-3 py-2 border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7]"
+                                class="w-full px-3 py-3 text-base border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7]"
                             />
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label
                                     for="mainCategory"
@@ -214,7 +214,7 @@ import "../styles/global.css";
                                 <select
                                     id="mainCategory"
                                     required
-                                    class="w-full px-3 py-2 border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7] [&>option]:bg-[#1e1e2e] [&>option]:text-[#cdd6f4]"
+                                    class="w-full px-3 py-3 text-base border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7] [&>option]:bg-[#1e1e2e] [&>option]:text-[#cdd6f4]"
                                 >
                                     <option value="">Select category...</option>
                                 </select>
@@ -228,7 +228,7 @@ import "../styles/global.css";
                                 <select
                                     id="areaId"
                                     required
-                                    class="w-full px-3 py-2 border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7] [&>option]:bg-[#1e1e2e] [&>option]:text-[#cdd6f4]"
+                                    class="w-full px-3 py-3 text-base border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4] focus:outline-none focus:ring-2 focus:ring-[#cba6f7] [&>option]:bg-[#1e1e2e] [&>option]:text-[#cdd6f4]"
                                 >
                                     <option value=""
                                         >Select sub category...</option
@@ -237,11 +237,11 @@ import "../styles/global.css";
                             </div>
                         </div>
                         <div class="flex-1"></div>
-                        <div class="flex gap-2">
+                        <div class="flex flex-col sm:flex-row gap-2">
                             <button
                                 type="button"
                                 id="startBtn"
-                                class="flex-1 bg-[#a6e3a1] text-[#1e1e2e] py-2 px-4 rounded-md hover:bg-[#94e2d5] transition disabled:bg-[#45475a] disabled:cursor-not-allowed disabled:text-[#6c7086] font-semibold min-h-10"
+                                class="flex-1 bg-[#a6e3a1] text-[#1e1e2e] py-3 px-4 rounded-md hover:bg-[#94e2d5] active:bg-[#94e2d5] transition disabled:bg-[#45475a] disabled:cursor-not-allowed disabled:text-[#6c7086] font-semibold min-h-12 touch-manipulation"
                             >
                                 Start Live Stream
                             </button>
@@ -249,7 +249,7 @@ import "../styles/global.css";
                                 type="button"
                                 id="stopBtn"
                                 disabled
-                                class="flex-1 bg-[#f38ba8] text-[#1e1e2e] py-2 px-4 rounded-md hover:bg-[#eba0ac] transition disabled:bg-[#45475a] disabled:cursor-not-allowed disabled:text-[#6c7086] font-semibold min-h-10"
+                                class="flex-1 bg-[#f38ba8] text-[#1e1e2e] py-3 px-4 rounded-md hover:bg-[#eba0ac] active:bg-[#eba0ac] transition disabled:bg-[#45475a] disabled:cursor-not-allowed disabled:text-[#6c7086] font-semibold min-h-12 touch-manipulation"
                             >
                                 Stop Live Stream
                             </button>
@@ -259,28 +259,28 @@ import "../styles/global.css";
 
                 <div
                     id="streamInfo"
-                    class="bg-[#313244] rounded-lg shadow-md p-6 hidden flex-1"
+                    class="bg-[#313244] rounded-lg shadow-md p-4 md:p-6 hidden flex-1 flex flex-col"
                 >
-                    <h2 class="text-2xl font-semibold mb-4 text-[#cdd6f4]">
+                    <h2 class="text-xl md:text-2xl font-semibold mb-4 text-[#cdd6f4]">
                         Stream Information
                     </h2>
-                    <div class="space-y-4">
+                    <div class="space-y-4 flex-1 flex flex-col">
                         <div>
                             <label
                                 class="block text-sm font-medium text-[#cdd6f4] mb-1"
                                 >Server URL</label
                             >
-                            <div class="flex gap-2">
+                            <div class="flex flex-col sm:flex-row gap-2">
                                 <input
                                     type="text"
                                     id="serverUrl"
                                     readonly
-                                    class="flex-1 px-3 py-2 border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4]"
+                                    class="flex-1 px-3 py-3 text-base border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4]"
                                 />
                                 <button
                                     type="button"
                                     onclick="copyToClipboard('serverUrl')"
-                                    class="bg-[#89b4fa] text-[#1e1e2e] px-4 py-2 rounded-md hover:bg-[#74c7ec] transition font-semibold min-h-10"
+                                    class="bg-[#89b4fa] text-[#1e1e2e] px-4 py-3 rounded-md hover:bg-[#74c7ec] active:bg-[#74c7ec] transition font-semibold min-h-12 touch-manipulation sm:w-auto"
                                 >
                                     Copy
                                 </button>
@@ -291,17 +291,17 @@ import "../styles/global.css";
                                 class="block text-sm font-medium text-[#cdd6f4] mb-1"
                                 >Stream Key</label
                             >
-                            <div class="flex gap-2">
+                            <div class="flex flex-col sm:flex-row gap-2">
                                 <input
                                     type="text"
                                     id="streamKey"
                                     readonly
-                                    class="flex-1 px-3 py-2 border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4]"
+                                    class="flex-1 px-3 py-3 text-base border border-[#585b70] rounded-md bg-[#1e1e2e] text-[#cdd6f4]"
                                 />
                                 <button
                                     type="button"
                                     onclick="copyToClipboard('streamKey')"
-                                    class="bg-[#89b4fa] text-[#1e1e2e] px-4 py-2 rounded-md hover:bg-[#74c7ec] transition font-semibold min-h-10"
+                                    class="bg-[#89b4fa] text-[#1e1e2e] px-4 py-3 rounded-md hover:bg-[#74c7ec] active:bg-[#74c7ec] transition font-semibold min-h-12 touch-manipulation sm:w-auto"
                                 >
                                     Copy
                                 </button>
@@ -311,9 +311,9 @@ import "../styles/global.css";
                 </div>
             </div>
 
-            <details class="mt-6 bg-[#313244] rounded-lg shadow-md p-6">
-                <summary class="text-xl font-semibold text-[#cba6f7] cursor-pointer">Usage Guide</summary>
-                <div class="mt-4 text-[#cdd6f4] grid grid-cols-4 gap-4 text-base">
+            <details class="mt-4 md:mt-6 bg-[#313244] rounded-lg shadow-md p-4 md:p-6">
+                <summary class="text-lg md:text-xl font-semibold text-[#cba6f7] cursor-pointer">Usage Guide</summary>
+                <div class="mt-4 text-[#cdd6f4] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm md:text-base">
                     <section>
                         <h3 class="font-semibold text-[#f5c2e7] mb-2">1. Setup Credentials</h3>
                         <ol class="list-decimal list-inside space-y-1 text-[#9399b2]">
