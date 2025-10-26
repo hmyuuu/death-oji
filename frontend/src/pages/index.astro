@@ -353,7 +353,7 @@ import "../styles/global.css";
         </div>
 
         <script>
-            const API_BASE = "http://localhost:11451";
+            const API_BASE = import.meta.env.PUBLIC_API_BASE || "http://localhost:11451";
             let partitionsData = [];
 
             function showStatus(message, isError = false) {
