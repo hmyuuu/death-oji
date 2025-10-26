@@ -5,7 +5,7 @@
 > *different body, same closed-source prison;*
 > *the wheel knows only one song.."*
 
-A modern web service for managing gugugaga live streaming codes, built with Rust backend and Astro frontend.
+A modern web service for managing gugugaga live streaming keys, built with Rust backend and Astro frontend.
 
 ## Quick Start
 
