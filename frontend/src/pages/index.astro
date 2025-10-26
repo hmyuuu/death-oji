@@ -353,7 +353,10 @@ import "../styles/global.css";
         </div>
 
         <script>
-            const API_BASE = "http://localhost:11451";
+            // Auto-detect API base URL based on environment
+            const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? "http://localhost:11451"
+                : `http://${window.location.hostname}:11451`;
             let partitionsData = [];
 
             function showStatus(message, isError = false) {
