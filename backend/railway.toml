@@ -1,9 +1,9 @@
 [build]
-builder = "nixpacks"
-buildCommand = "cd backend && cargo build --release"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "cd backend && ./target/release/death-oji-backend"
+startCommand = "./death-oji-backend"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 
