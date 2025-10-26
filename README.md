@@ -7,39 +7,6 @@
 
 A modern web service for managing gugugaga live streaming codes, built with Rust backend and Astro frontend.
 
-## Prerequisites
-
-- [mise](https://github.com/jdx/mise) - Tool version manager (recommended)
-- Rust (latest stable)
-- Bun or Node.js
-- gugugaga account with live streaming permissions
-
-### Installing mise
-
-mise automatically manages tool versions specified in `mise.toml`. Install it with:
-
-```bash
-# Using just (macOS uses Homebrew, Linux uses curl)
-just install
-
-# Or using make
-make install
-
-# Or manually
-curl https://mise.run | sh  # Linux/macOS
-brew install mise           # macOS only
-```
-
-**Shell Integration:**
-- **Fish**: Tools are automatically activated (no config needed)
-- **Bash/Zsh**: Add to your shell config:
-  ```bash
-  echo 'eval "$(mise activate bash)"' >> ~/.bashrc  # for bash
-  echo 'eval "$(mise activate zsh)"' >> ~/.zshrc    # for zsh
-  ```
-
-After installing mise, run `mise install` in the project directory to install all required tools.
-
 ## Quick Start
 
 ### Using Docker Compose (Recommended)
@@ -87,6 +54,39 @@ bun run dev
 ```
 
 Open `http://localhost:11452` in your browser.
+
+## Prerequisites
+
+- [mise](https://github.com/jdx/mise) - Tool version manager (recommended)
+- Rust (latest stable)
+- Bun or Node.js
+- gugugaga account with live streaming permissions
+
+### Installing mise
+
+mise automatically manages tool versions specified in `mise.toml`. Install it with:
+
+```bash
+# Using just (macOS uses Homebrew, Linux uses curl)
+just install
+
+# Or using make
+make install
+
+# Or manually
+curl https://mise.run | sh  # Linux/macOS
+brew install mise           # macOS only
+```
+
+**Shell Integration:**
+- **Fish**: Tools are automatically activated (no config needed)
+- **Bash/Zsh**: Add to your shell config:
+  ```bash
+  echo 'eval "$(mise activate bash)"' >> ~/.bashrc  # for bash
+  echo 'eval "$(mise activate zsh)"' >> ~/.zshrc    # for zsh
+  ```
+
+After installing mise, run `mise install` in the project directory to install all required tools.
 
 ## Usage
 
