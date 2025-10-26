@@ -42,7 +42,27 @@ After installing mise, run `mise install` in the project directory to install al
 
 ## Quick Start
 
-### Using mise (Recommended)
+### Using Docker Compose (Recommended)
+
+```bash
+# Build and start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+
+# Rebuild after changes
+docker-compose up -d --build
+```
+
+**Ports:**
+- Backend: http://localhost:11451
+- Frontend: http://localhost:11452
+
+### Using mise
 
 ```bash
 mise install        # Install tools (first time only)

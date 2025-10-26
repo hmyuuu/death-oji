@@ -1,7 +1,6 @@
 [tools]
-rust = "stable"
+rust = "latest"
 bun = "latest"
-cargo = "latest"
 
 [env]
 RUST_LOG = "debug"
