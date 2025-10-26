@@ -1,0 +1,9 @@
+[tools]
+bun = "latest"
+rust = "latest"
+
+[env]
+# Backend port
+BACKEND_PORT = "11451"
+# Frontend port
+FRONTEND_PORT = "11452"

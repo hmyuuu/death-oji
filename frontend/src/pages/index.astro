@@ -1,0 +1,661 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Death-Oji - gugugaga Live Stream Code</title>
+    </head>
+    <body class="bg-[#282a36] min-h-screen">
+        <div class="container mx-auto px-4 py-8">
+            <header class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-[#bd93f9] mb-2">
+                    Death-Oji
+                </h1>
+                <p
+                    class="text-[#f8f8f2] italic max-w-xl mx-auto text-base leading-relaxed opacity-70"
+                >
+                    "Death-Oji escaped Live-Hime's samsara,<br />
+                    then immediately reincarnated as the same karma:<br />
+                    different body, same closed-source prison;<br />
+                    the wheel knows only one song.."
+                </p>
+            </header>
+
+            <div class="flex gap-6 items-stretch">
+                <div
+                    id="userInfo"
+                    class="bg-[#44475a] rounded-lg shadow-md p-6 hidden flex-1 flex flex-col"
+                >
+                    <h2 class="text-2xl font-semibold mb-4 text-[#f8f8f2]">
+                        UP Information
+                    </h2>
+                    <div class="flex flex-col items-center mb-4">
+                        <img
+                            id="userAvatar"
+                            class="w-24 h-24 rounded-full mb-2 object-cover border-2 border-[#bd93f9]"
+                            alt="Avatar"
+                            src=""
+                            referrerpolicy="no-referrer"
+                            crossorigin="anonymous"
+                        />
+                        <h3
+                            id="userName"
+                            class="text-xl font-bold text-[#f8f8f2]"
+                        >
+                        </h3>
+                        <p id="userLevel" class="text-[#6272a4]"></p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 text-center mt-6">
+                        <div class="p-3">
+                            <p
+                                class="text-2xl font-bold text-[#8be9fd]"
+                                id="userFollowing"
+                            >
+                                0
+                            </p>
+                            <p class="text-sm text-[#6272a4]">Following</p>
+                        </div>
+                        <div class="p-3">
+                            <p
+                                class="text-2xl font-bold text-[#ff79c6]"
+                                id="userFollower"
+                            >
+                                0
+                            </p>
+                            <p class="text-sm text-[#6272a4]">Followers</p>
+                        </div>
+                        <div class="p-3">
+                            <p
+                                class="text-2xl font-bold text-[#bd93f9]"
+                                id="userDynamic"
+                            >
+                                0
+                            </p>
+                            <p class="text-sm text-[#6272a4]">Dynamics</p>
+                        </div>
+                    </div>
+                    <div class="flex-1"></div>
+                    <div id="linkButtons" class="flex gap-2 hidden">
+                        <button
+                            type="button"
+                            id="spaceBtn"
+                            class="flex-1 bg-[#8be9fd] text-[#282a36] py-2 px-4 rounded-md hover:bg-[#74c7d7] transition font-semibold min-h-10"
+                        >
+                            Open gugugaga Space
+                        </button>
+                        <button
+                            type="button"
+                            id="liveBtn"
+                            class="flex-1 bg-[#50fa7b] text-[#282a36] py-2 px-4 rounded-md hover:bg-[#44d468] transition font-semibold min-h-10"
+                            onclick="window.open('https://live.bilibili.com/' + document.getElementById('roomId').value, '_blank')"
+                        >
+                            Open Live Room
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-[#44475a] rounded-lg shadow-md p-6 flex-1 flex flex-col">
+                    <h2 class="text-2xl font-semibold mb-4 text-[#f8f8f2]">
+                        Account Credentials
+                    </h2>
+                    <form id="credentialsForm" class="space-y-4 flex-1 flex flex-col">
+                        <div>
+                            <label
+                                for="roomId"
+                                class="block text-sm font-medium text-[#f8f8f2] mb-1"
+                                >Room ID</label
+                            >
+                            <input
+                                type="text"
+                                id="roomId"
+                                required
+                                class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9]"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="cookies"
+                                class="block text-sm font-medium text-[#f8f8f2] mb-1"
+                                >Cookies</label
+                            >
+                            <input
+                                type="password"
+                                id="cookies"
+                                required
+                                class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9]"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="csrfToken"
+                                class="block text-sm font-medium text-[#f8f8f2] mb-1"
+                                >CSRF Token</label
+                            >
+                            <input
+                                type="password"
+                                id="csrfToken"
+                                required
+                                class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9]"
+                            />
+                        </div>
+                        <div class="flex-1"></div>
+                        <div class="flex gap-2">
+                            <button
+                                type="button"
+                                id="loadBtn"
+                                class="flex-1 bg-[#bd93f9] text-[#282a36] py-2 px-4 rounded-md hover:bg-[#9580d4] transition font-semibold min-h-10"
+                            >
+                                Load from JSON
+                            </button>
+                            <button
+                                type="button"
+                                id="saveBtn"
+                                class="flex-1 bg-[#6272a4] text-[#f8f8f2] py-2 px-4 rounded-md hover:bg-[#525d8a] transition font-semibold min-h-10"
+                            >
+                                Save to File
+                            </button>
+                            <button
+                                type="button"
+                                id="checkUserBtn"
+                                class="flex-1 bg-[#ff79c6] text-[#282a36] py-2 px-4 rounded-md hover:bg-[#d966a8] transition font-semibold min-h-10"
+                            >
+                                Check User Info
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-[#44475a] rounded-lg shadow-md p-6 flex-1 flex flex-col">
+                    <h2 class="text-2xl font-semibold mb-4 text-[#f8f8f2]">
+                        Stream Settings
+                    </h2>
+                    <form id="streamForm" class="space-y-4 flex-1 flex flex-col">
+                        <div>
+                            <label
+                                for="title"
+                                class="block text-sm font-medium text-[#f8f8f2] mb-1"
+                                >Stream Title</label
+                            >
+                            <input
+                                type="text"
+                                id="title"
+                                value="My Live Stream"
+                                class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9]"
+                            />
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label
+                                    for="mainCategory"
+                                    class="block text-sm font-medium text-[#f8f8f2] mb-1"
+                                    >Main Category</label
+                                >
+                                <select
+                                    id="mainCategory"
+                                    required
+                                    class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9] [&>option]:bg-[#282a36] [&>option]:text-[#f8f8f2]"
+                                >
+                                    <option value="">Select category...</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label
+                                    for="areaId"
+                                    class="block text-sm font-medium text-[#f8f8f2] mb-1"
+                                    >Sub Category</label
+                                >
+                                <select
+                                    id="areaId"
+                                    required
+                                    class="w-full px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2] focus:outline-none focus:ring-2 focus:ring-[#bd93f9] [&>option]:bg-[#282a36] [&>option]:text-[#f8f8f2]"
+                                >
+                                    <option value=""
+                                        >Select sub category...</option
+                                    >
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex-1"></div>
+                        <div class="flex gap-2">
+                            <button
+                                type="button"
+                                id="startBtn"
+                                class="flex-1 bg-[#50fa7b] text-[#282a36] py-2 px-4 rounded-md hover:bg-[#44d468] transition disabled:bg-[#44475a] disabled:cursor-not-allowed disabled:text-[#6272a4] font-semibold min-h-10"
+                            >
+                                Start Live Stream
+                            </button>
+                            <button
+                                type="button"
+                                id="stopBtn"
+                                disabled
+                                class="flex-1 bg-[#ff5555] text-[#282a36] py-2 px-4 rounded-md hover:bg-[#d94747] transition disabled:bg-[#44475a] disabled:cursor-not-allowed disabled:text-[#6272a4] font-semibold min-h-10"
+                            >
+                                Stop Live Stream
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div
+                    id="streamInfo"
+                    class="bg-[#44475a] rounded-lg shadow-md p-6 hidden flex-1"
+                >
+                    <h2 class="text-2xl font-semibold mb-4 text-[#f8f8f2]">
+                        Stream Information
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-[#f8f8f2] mb-1"
+                                >Server URL</label
+                            >
+                            <div class="flex gap-2">
+                                <input
+                                    type="text"
+                                    id="serverUrl"
+                                    readonly
+                                    class="flex-1 px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2]"
+                                />
+                                <button
+                                    type="button"
+                                    onclick="copyToClipboard('serverUrl')"
+                                    class="bg-[#bd93f9] text-[#282a36] px-4 py-2 rounded-md hover:bg-[#9580d4] transition font-semibold min-h-10"
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-[#f8f8f2] mb-1"
+                                >Stream Key</label
+                            >
+                            <div class="flex gap-2">
+                                <input
+                                    type="text"
+                                    id="streamKey"
+                                    readonly
+                                    class="flex-1 px-3 py-2 border border-[#6272a4] rounded-md bg-[#282a36] text-[#f8f8f2]"
+                                />
+                                <button
+                                    type="button"
+                                    onclick="copyToClipboard('streamKey')"
+                                    class="bg-[#bd93f9] text-[#282a36] px-4 py-2 rounded-md hover:bg-[#9580d4] transition font-semibold min-h-10"
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <details class="mt-6 bg-[#44475a] rounded-lg shadow-md p-6">
+                <summary class="text-xl font-semibold text-[#bd93f9] cursor-pointer">Usage Guide</summary>
+                <div class="mt-4 text-[#f8f8f2] grid grid-cols-4 gap-4 text-base">
+                    <section>
+                        <h3 class="font-semibold text-[#ff79c6] mb-2">1. Setup Credentials</h3>
+                        <ol class="list-decimal list-inside space-y-1 text-[#6272a4]">
+                            <li>Log in to gugugaga and open your live room</li>
+                            <li>Press F12 → Network tab</li>
+                            <li>Send a chat message</li>
+                            <li>Find the "send" request</li>
+                            <li>Copy Cookie in `Headers` and csrf_token in `Payload`</li>
+                        </ol>
+                    </section>
+                    <section>
+                        <h3 class="font-semibold text-[#ff79c6] mb-2">2. Check User Info</h3>
+                        <p class="text-[#6272a4]">Click "Check User Info" to verify credentials and view your profile.</p>
+                    </section>
+                    <section>
+                        <h3 class="font-semibold text-[#ff79c6] mb-2">3. Configure Stream</h3>
+                        <p class="text-[#6272a4]">Set your stream title and select categories. Settings are auto-saved.</p>
+                    </section>
+                    <section>
+                        <h3 class="font-semibold text-[#ff79c6] mb-2">4. Start Streaming</h3>
+                        <ol class="list-decimal list-inside space-y-1 text-[#6272a4]">
+                            <li>Click "Start Live Stream"</li>
+                            <li>Copy Server URL and Stream Key</li>
+                            <li>Configure in OBS: Settings → Stream → Custom</li>
+                            <li>Paste credentials and start streaming</li>
+                        </ol>
+                    </section>
+                </div>
+            </details>
+
+        <div
+            id="status"
+            class="fixed top-4 left-1/2 -translate-x-1/2 max-w-[calc(100%-2rem)] md:left-4 md:translate-x-0 md:max-w-md p-4 rounded-md hidden shadow-lg z-50"
+        >
+            <p id="statusMessage"></p>
+        </div>
+        </div>
+
+        <script>
+            const API_BASE = "http://localhost:11451";
+            let partitionsData = [];
+
+            function showStatus(message, isError = false) {
+                const status = document.getElementById("status");
+                const statusMessage = document.getElementById("statusMessage");
+                status.classList.remove(
+                    "hidden",
+                    "bg-[#50fa7b]",
+                    "text-[#282a36]",
+                    "bg-[#ff5555]",
+                );
+                status.classList.add(isError ? "bg-[#ff5555]" : "bg-[#50fa7b]");
+                status.classList.add("text-[#282a36]");
+                statusMessage.textContent = message;
+            }
+
+            function copyToClipboard(elementId) {
+                const element = document.getElementById(elementId);
+                navigator.clipboard.writeText(element.value);
+                showStatus("Copied to clipboard!");
+            }
+
+            async function loadPartitions() {
+                try {
+                    const response = await fetch(`${API_BASE}/api/partitions`);
+                    const data = await response.json();
+                    partitionsData = data.data;
+
+                    const mainCategory =
+                        document.getElementById("mainCategory");
+                    mainCategory.innerHTML =
+                        '<option value="">Select category...</option>';
+                    partitionsData.forEach((cat) => {
+                        const option = document.createElement("option");
+                        option.value = cat.name;
+                        option.textContent = cat.name;
+                        mainCategory.appendChild(option);
+                    });
+                } catch (e) {
+                    showStatus("Failed to load partitions", true);
+                }
+            }
+
+            document
+                .getElementById("mainCategory")
+                .addEventListener("change", (e) => {
+                    const selectedCat = partitionsData.find(
+                        (cat) => cat.name === e.target.value,
+                    );
+                    const areaId = document.getElementById("areaId");
+                    areaId.innerHTML =
+                        '<option value="">Select sub category...</option>';
+
+                    if (selectedCat) {
+                        selectedCat.list.forEach((sub) => {
+                            const option = document.createElement("option");
+                            option.value = sub.id;
+                            option.textContent = sub.name;
+                            areaId.appendChild(option);
+                        });
+                    }
+                });
+
+            loadPartitions();
+
+            // Load saved stream settings
+            function loadStreamSettings() {
+                const saved = localStorage.getItem("streamSettings");
+                if (saved) {
+                    const settings = JSON.parse(saved);
+                    if (settings.title)
+                        document.getElementById("title").value = settings.title;
+                    if (settings.mainCategory) {
+                        document.getElementById("mainCategory").value =
+                            settings.mainCategory;
+                        // Trigger category change to load sub-categories
+                        document
+                            .getElementById("mainCategory")
+                            .dispatchEvent(new Event("change"));
+
+                        if (settings.areaId) {
+                            setTimeout(() => {
+                                document.getElementById("areaId").value =
+                                    settings.areaId;
+                            }, 500);
+                        }
+                    }
+                }
+            }
+
+            // Save stream settings
+            function saveStreamSettings() {
+                const settings = {
+                    title: document.getElementById("title").value,
+                    mainCategory: document.getElementById("mainCategory").value,
+                    areaId: document.getElementById("areaId").value
+                };
+                localStorage.setItem(
+                    "streamSettings",
+                    JSON.stringify(settings),
+                );
+            }
+
+            // Auto-save on change
+            ["title", "mainCategory", "areaId"].forEach((id) => {
+                document
+                    .getElementById(id)
+                    ?.addEventListener("change", saveStreamSettings);
+            });
+
+            // Load settings after partitions are loaded
+            setTimeout(loadStreamSettings, 500);
+
+            document
+                .getElementById("startBtn")
+                .addEventListener("click", async () => {
+                    const roomId = document.getElementById("roomId").value;
+                    const cookies = document.getElementById("cookies").value;
+                    const csrfToken =
+                        document.getElementById("csrfToken").value;
+                    const title = document.getElementById("title").value;
+                    const areaId = parseInt(
+                        document.getElementById("areaId").value,
+                    );
+                    if (!roomId || !cookies || !csrfToken) {
+                        showStatus("Please fill in all fields", true);
+                        return;
+                    }
+
+                    const startBtn = document.getElementById("startBtn");
+                    startBtn.disabled = true;
+                    startBtn.textContent = "Starting...";
+
+                    try {
+                        const response = await fetch(
+                            `${API_BASE}/api/stream/start`,
+                            {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    room_id: roomId,
+                                    cookies,
+                                    csrf_token: csrfToken,
+                                    title,
+                                    area_id: areaId,
+                                }),
+                            },
+                        );
+
+                        if (!response.ok) {
+                            const error = await response.json();
+                            throw new Error(
+                                error.error || "Failed to start stream",
+                            );
+                        }
+
+                        const data = await response.json();
+                        document.getElementById("serverUrl").value =
+                            data.server_url;
+                        document.getElementById("streamKey").value =
+                            data.stream_key;
+                        document
+                            .getElementById("streamInfo")
+                            .classList.remove("hidden");
+                        document.getElementById("stopBtn").disabled = false;
+                        showStatus("Stream started successfully!");
+                    } catch (error) {
+                        showStatus(error.message, true);
+                        startBtn.disabled = false;
+                    } finally {
+                        startBtn.textContent = "Start Live Stream";
+                    }
+                });
+
+            document
+                .getElementById("stopBtn")
+                .addEventListener("click", async () => {
+                    const roomId = document.getElementById("roomId").value;
+                    const cookies = document.getElementById("cookies").value;
+                    const csrfToken =
+                        document.getElementById("csrfToken").value;
+
+                    const stopBtn = document.getElementById("stopBtn");
+                    stopBtn.disabled = true;
+                    stopBtn.textContent = "Stopping...";
+
+                    try {
+                        const response = await fetch(
+                            `${API_BASE}/api/stream/stop`,
+                            {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    room_id: roomId,
+                                    cookies,
+                                    csrf_token: csrfToken,
+                                }),
+                            },
+                        );
+
+                        if (!response.ok) {
+                            const error = await response.json();
+                            throw new Error(
+                                error.error || "Failed to stop stream",
+                            );
+                        }
+
+                        document
+                            .getElementById("streamInfo")
+                            .classList.add("hidden");
+                        document.getElementById("startBtn").disabled = false;
+                        showStatus("Stream stopped successfully!");
+                    } catch (error) {
+                        showStatus(error.message, true);
+                        stopBtn.disabled = false;
+                    } finally {
+                        stopBtn.textContent = "Stop Live Stream";
+                    }
+                });
+
+            let userUid = null;
+
+            async function loadUserInfo(cookies) {
+                try {
+                    const response = await fetch(`${API_BASE}/api/user/info`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ cookies }),
+                    });
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(
+                            error.error || "Failed to load user info",
+                        );
+                    }
+                    const user = await response.json();
+                    userUid = user.uid;
+                    document.getElementById("userAvatar").src =
+                        user.face.replace(/^http:/, "https:");
+                    document.getElementById("userName").textContent =
+                        user.uname;
+                    document.getElementById("userLevel").textContent =
+                        `Level ${user.level}`;
+                    document.getElementById("userFollowing").textContent =
+                        user.following;
+                    document.getElementById("userFollower").textContent =
+                        user.follower;
+                    document.getElementById("userDynamic").textContent =
+                        user.dynamic_count;
+                    document
+                        .getElementById("userInfo")
+                        .classList.remove("hidden");
+                    document
+                        .getElementById("linkButtons")
+                        .classList.remove("hidden");
+                    showStatus("User info loaded!");
+                } catch (e) {
+                    showStatus(e.message || "Failed to load user info", true);
+                }
+            }
+
+            document.getElementById("loadBtn").addEventListener("click", () => {
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = ".json";
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    const text = await file.text();
+                    const creds = JSON.parse(text);
+                    document.getElementById("roomId").value = creds.room_id;
+                    document.getElementById("cookies").value = creds.cookies;
+                    document.getElementById("csrfToken").value =
+                        creds.csrf_token;
+                    showStatus("Credentials loaded!");
+                    loadUserInfo(creds.cookies);
+                };
+                input.click();
+            });
+
+            document
+                .getElementById("checkUserBtn")
+                .addEventListener("click", () => {
+                    const cookies = document.getElementById("cookies").value;
+                    if (!cookies) {
+                        showStatus("Please enter cookies first", true);
+                        return;
+                    }
+                    loadUserInfo(cookies);
+                });
+
+            document
+                .getElementById("spaceBtn")
+                .addEventListener("click", () => {
+                    if (userUid) {
+                        window.open(
+                            `https://space.bilibili.com/${userUid}`,
+                            "_blank",
+                        );
+                    }
+                });
+
+            document.getElementById("saveBtn").addEventListener("click", () => {
+                const creds = {
+                    room_id: document.getElementById("roomId").value,
+                    cookies: document.getElementById("cookies").value,
+                    csrf_token: document.getElementById("csrfToken").value,
+                };
+                const blob = new Blob([JSON.stringify(creds, null, 2)], {
+                    type: "application/json",
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "credentials.json";
+                a.click();
+                showStatus("Credentials saved!");
+            });
+
+            window.copyToClipboard = copyToClipboard;
+        </script>
+    </body>
+</html>
