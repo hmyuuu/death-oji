@@ -177,39 +177,94 @@ No environment variables needed by default. The backend uses:
 
 ### Backend Issues
 
+**502 Bad Gateway / Application failed to respond:**
+- **Issue**: Backend not binding to Railway's dynamic PORT
+- **Solution**: The backend must read the `PORT` environment variable
+  ```rust
+  // In backend/src/main.rs
+  let port = std::env::var("PORT").unwrap_or_else(|_| "11451".to_string());
+  let addr = format!("0.0.0.0:{}", port);
+  let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+  ```
+- **Verify**: Check Railway logs with `railway logs` or in the dashboard
+
 **Build fails on Railway:**
-- Check Railway build logs
+- Check Railway build logs in the dashboard
 - Ensure `partition.json` exists in backend directory
 - Verify `Cargo.lock` is committed to git
+- Ensure `railway.toml` is in the `backend` directory
+- Set **Root Directory** to `backend` in Railway settings
 
-**Health check fails:**
-```bash
-railway logs
-```
-Check if the server is binding to `0.0.0.0:11451`
+**Missing OpenSSL libraries:**
+- Ensure Dockerfile includes: `RUN apt-get update && apt-get install -y ca-certificates libssl3`
+- Required for HTTPS requests to external APIs
 
 **CORS errors:**
 The backend already allows all origins. If you still see CORS errors, check Railway logs.
 
 ### Frontend Issues
 
-**API calls fail:**
-- Verify `PUBLIC_API_BASE` environment variable is set in Vercel
-- Check browser console for exact error
-- Ensure Railway backend is running: `curl https://your-app.up.railway.app/health`
+**API calls return "Unexpected token" or JSON parse errors:**
+- **Issue**: Frontend is calling wrong API endpoint (missing `https://` protocol)
+- **Solution**: Ensure `PUBLIC_API_BASE` includes the full URL with protocol
+  - ✅ Correct: `https://your-app.up.railway.app`
+  - ❌ Wrong: `your-app.up.railway.app`
+  - ❌ Wrong: `http://localhost:11451`
+
+**API calls return 404 NOT_FOUND:**
+- **Issue**: Frontend is calling Vercel instead of Railway backend
+- **Solution**:
+  1. Set `PUBLIC_API_BASE` environment variable in Vercel with **full URL including https://**
+  2. Redeploy the frontend (environment variables only apply on build)
+  3. Verify in browser console or check the bundled JavaScript:
+     ```bash
+     curl -s https://your-vercel-app.com/ | grep -o 'const l="[^"]*"'
+     # Should show: const l="https://your-app.up.railway.app"
+     ```
 
 **Environment variable not updating:**
 ```bash
+# Remove old variable
 vercel env rm PUBLIC_API_BASE production
+
+# Add new variable with FULL URL including https://
 vercel env add PUBLIC_API_BASE production
-# Then redeploy
+# Enter: https://your-app.up.railway.app
+
+# Redeploy to apply changes
 vercel --prod
 ```
 
+**Vercel build fails - "cd: frontend: No such file or directory":**
+- **Issue**: Root directory not set correctly
+- **Solution**:
+  1. Go to Vercel Dashboard → Settings → General
+  2. Set **Root Directory** to `frontend`
+  3. Ensure `vercel.json` is in the `frontend` directory (not project root)
+  4. Redeploy
+
 **Build fails:**
-- Check Vercel build logs
-- Ensure `bun` is available (Vercel auto-detects it)
+- Check Vercel build logs in the dashboard
+- Ensure `bun` is available (Vercel auto-detects it from package.json)
 - Verify `astro.config.mjs` has `output: 'static'`
+- Ensure `frontend/vercel.json` exists with correct configuration
+
+### Common Deployment Checklist
+
+✅ **Backend (Railway)**
+- [ ] Root Directory set to `backend`
+- [ ] `railway.toml` is in `backend/` directory
+- [ ] Backend binds to `PORT` environment variable
+- [ ] Health endpoint returns `OK`: `curl https://your-app.up.railway.app/health`
+- [ ] Partitions endpoint returns JSON: `curl https://your-app.up.railway.app/api/partitions`
+
+✅ **Frontend (Vercel)**
+- [ ] Root Directory set to `frontend`
+- [ ] `vercel.json` is in `frontend/` directory
+- [ ] Environment variable `PUBLIC_API_BASE` is set with **full URL including https://**
+- [ ] Redeployed after setting environment variable
+- [ ] Verify API_BASE in deployed code: `curl -s https://your-vercel-app.com/ | grep 'const l='`
+- [ ] Browser console shows no CORS or 404 errors
 
 ## Updating Deployments
 
