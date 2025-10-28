@@ -25,9 +25,7 @@ docker-compose down
 docker-compose up -d --build
 ```
 
-**Ports:**
-- Backend: http://localhost:11451
-- Frontend: http://localhost:11452
+Access the application at the frontend URL (backend port is automatically configured via environment variable)
 
 ### Using mise
 
@@ -40,20 +38,23 @@ Alternatively, use `just dev` or `make dev` for the same functionality.
 
 ### Manual Setup
 
-**Backend (Port 11451):**
+**Backend:**
 ```bash
 cd backend
-cargo run
+cargo run  # Reads PORT from environment variable, defaults to 11451
 ```
 
-**Frontend (Port 11452):**
+**Frontend:**
 ```bash
 cd frontend
 bun install
-bun run dev
+bun run dev  # Check terminal for URL
 ```
 
-Open `http://localhost:11452` in your browser.
+**Port Configuration:**
+- Backend: Set via `PORT` environment variable (defaults to 11451)
+- Frontend: Set via `PUBLIC_API_BASE` environment variable for backend connection
+- See `DEPLOYMENT.md` for production setup
 
 ## Prerequisites
 
